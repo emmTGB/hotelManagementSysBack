@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: hotelManagementSysBack
+server:
+  port: 12417
+  jetty:
+    threads:
+      max: 200
+
