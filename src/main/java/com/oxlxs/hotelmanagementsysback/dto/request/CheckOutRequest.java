@@ -1,4 +1,11 @@
 package com.oxlxs.hotelmanagementsysback.dto.request;
 
-public class SettleStayRequest {
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class CheckOutRequest {
+    private Long stayId;
+    private Long operatorId;
 }

@@ -1,4 +1,8 @@
 package com.oxlxs.hotelmanagementsysback.repository;
 
-public interface RoomDAO {
+import com.oxlxs.hotelmanagementsysback.entity.Room;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface RoomDAO extends JpaRepository<Room, Long> {
+
 }

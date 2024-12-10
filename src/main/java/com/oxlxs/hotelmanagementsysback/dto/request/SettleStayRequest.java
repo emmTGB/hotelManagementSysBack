@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BookCancelRequest {
+public class SettleStayRequest {
     private Long preId;
     private Long operatorId;
 }

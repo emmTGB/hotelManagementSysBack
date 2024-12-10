@@ -1,6 +1,6 @@
-package com.kevin.bankmanagementsys.security;
+package com.oxlxs.hotelmanagementsysback.security;
 
 public enum SessionType {
-    USER,
+    CUSTOMER,
     EMPLOYEE,
 }
