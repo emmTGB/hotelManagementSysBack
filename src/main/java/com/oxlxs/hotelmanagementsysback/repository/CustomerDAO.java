@@ -1,6 +1,7 @@
 package com.oxlxs.hotelmanagementsysback.repository;
 
 import com.oxlxs.hotelmanagementsysback.entity.Customer;
+import com.oxlxs.hotelmanagementsysback.entity.StayRecord;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,8 @@ public interface CustomerDAO extends JpaRepository<Customer, Long> {
 
     // public Page<Customer> findAll(Pageable pageable);
 
+    public Optional<Customer> findByStayRecordAndMainRes(StayRecord stayRecord, boolean mainRes);
+
     @Modifying
     @Query(value = "call find_room_by_id_number(:id_number)", nativeQuery = true)
     public Long getRoom(@Param("id_number") String idNumber);
@@ -23,4 +26,6 @@ public interface CustomerDAO extends JpaRepository<Customer, Long> {
     public Optional<Customer> findFullNameById(Long id);
 
     public Optional<Customer> findByIdNumber(String idNumber);
+
+    String id(Long id);
 }

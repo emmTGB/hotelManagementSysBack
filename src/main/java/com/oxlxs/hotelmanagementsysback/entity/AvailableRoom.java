@@ -9,19 +9,24 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@Getter
 @Setter
+@Getter
 @Entity
-@Table(name = "room_types")
-public class RoomType {
-    @Id
-    @Column(nullable = false, unique = true)
-    private String name;
+@Table(name = "available_rooms")
+public class AvailableRoom {
 
-    @Column
+    @Id
+    private Long id;
+
+    @Column(nullable = false)
+    private String typeName;
+
+    @Column(nullable = false)
     private String fullName;
 
     @Column(nullable = false)
     private BigDecimal price;
 
+    @Column(nullable = false)
+    private Long available;
 }

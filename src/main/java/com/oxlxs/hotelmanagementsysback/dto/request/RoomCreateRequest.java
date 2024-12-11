@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RoomCreateRequest {
-    String roomNumber;
+    Long roomNumber;
     String typeName;
 }

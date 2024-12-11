@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BookInRequest {
-    private Long preId;
-    private Long operatorId;
+public class LoginRequest {
+    private String username;
+    private String password;
 }

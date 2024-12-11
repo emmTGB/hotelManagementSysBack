@@ -1,12 +1,11 @@
 package com.oxlxs.hotelmanagementsysback.entity;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
-import com.oxlxs.hotelmanagementsysback.dto.request.CustomerValidateRequest;
+import com.oxlxs.hotelmanagementsysback.dto.request.CustomerRecordRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -30,19 +29,23 @@ public class Customer {
     @Column
     private LocalDateTime createdAt;
 
-
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "op_id", referencedColumnName = "id")
+    @JoinColumn(name = "stay_id", referencedColumnName = "id")
     private StayRecord stayRecord;
 
     @Column
-    private BigDecimal deposit;
+    private int status;
 
-    public Customer(CustomerValidateRequest request) {
+    @Column(nullable = false)
+    private boolean mainRes = false;
+
+    public Customer(CustomerRecordRequest request) {
         this.name = request.getName();
         this.idNumber = request.getIdNumber();
         this.phone = request.getPhone();
+        this.status = request.getStatus();
     }
 
-    public Customer(){}
+    public Customer() {
+    }
 }

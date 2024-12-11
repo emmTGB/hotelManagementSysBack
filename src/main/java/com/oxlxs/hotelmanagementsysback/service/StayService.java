@@ -1,18 +1,17 @@
 package com.oxlxs.hotelmanagementsysback.service;
 
-import com.oxlxs.hotelmanagementsysback.dto.request.BookRequest;
 import com.oxlxs.hotelmanagementsysback.dto.request.CheckInRequest;
-import com.oxlxs.hotelmanagementsysback.dto.request.SettleStayRequest;
-import com.oxlxs.hotelmanagementsysback.exception.customer.CustomerNotFoundException;
-import com.oxlxs.hotelmanagementsysback.exception.employee.EmployeeNotExistsException;
-import com.oxlxs.hotelmanagementsysback.exception.room.RoomNotFoundException;
-import com.oxlxs.hotelmanagementsysback.exception.stay.StayRecordNotExistsException;
+import com.oxlxs.hotelmanagementsysback.dto.request.CustomerRecordRequest;
+import com.oxlxs.hotelmanagementsysback.entity.Customer;
+import com.oxlxs.hotelmanagementsysback.entity.StayRecord;
 import com.oxlxs.hotelmanagementsysback.repository.CustomerDAO;
-import com.oxlxs.hotelmanagementsysback.repository.EmployeeDAO;
-import com.oxlxs.hotelmanagementsysback.repository.RoomDAO;
 import com.oxlxs.hotelmanagementsysback.repository.StayRecordDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Iterator;
+import java.util.List;
 
 @Service
 public class StayService {
@@ -20,44 +19,35 @@ public class StayService {
     StayRecordDAO stayRecordDAO;
 
     @Autowired
-    EmployeeDAO employeeDAO;
-
-    @Autowired
     CustomerDAO customerDAO;
 
-    @Autowired
-    RoomDAO roomDAO;
-
-    public void settleStay(SettleStayRequest request) throws RuntimeException {
-        Long preId = request.getPreId();
-        Long operatorId = request.getOperatorId();
-
-        if(!stayRecordDAO.existsById(preId)){
-            throw new StayRecordNotExistsException();
-        }
-
-        if(!employeeDAO.existsById(operatorId)){
-            throw new EmployeeNotExistsException();
-        }
-
-        stayRecordDAO.settleStay(preId, operatorId);
-    }
-
     public void checkIn(CheckInRequest request) throws RuntimeException {
-        Long customerId = request.getCustomerId();
-        Long roomId = request.getRoomId();
-        Long operatorId = request.getOperatorId();
+        List<CustomerRecordRequest> customers = request.getCustomers();
+        CustomerRecordRequest mainCustomer = null;
+        Iterator<CustomerRecordRequest> iterator = customers.iterator();
+        while (iterator.hasNext()) {
+            CustomerRecordRequest customer = iterator.next();
+            if(customer.getStatus() == 1){
+                mainCustomer = customer;
+                iterator.remove();
+                break;
+            }
+        }
 
-        if(!customerDAO.existsById(customerId)) throw new CustomerNotFoundException();
+        LocalDateTime now = LocalDateTime.now();
 
-        if(!roomDAO.existsById(roomId)) throw new RoomNotFoundException();
-
-        if(!employeeDAO.existsById(operatorId)) throw new EmployeeNotExistsException();
-
-        stayRecordDAO.checkIn(customerId, roomId, operatorId);
-    }
-
-    public void book(BookRequest request) throws RuntimeException {
-
+        if (mainCustomer != null) {
+            Long stayId = stayRecordDAO.checkin(
+                    now, request.getRoomId(), request.getDeposit(),
+                    mainCustomer.getName(), mainCustomer.getIdNumber(), mainCustomer.getPhone()
+            );
+            StayRecord stayRecord = stayRecordDAO.findById(stayId)
+                    .orElseThrow(RuntimeException::new);
+            for(CustomerRecordRequest customer : customers){
+                Customer eCustomer = new Customer(customer);
+                eCustomer.setStayRecord(stayRecord);
+                customerDAO.save(eCustomer);
+            }
+        }else throw new RuntimeException();
     }
 }

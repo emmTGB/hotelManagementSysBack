@@ -1,12 +1,10 @@
 package com.oxlxs.hotelmanagementsysback.entity;
 
-import java.math.BigDecimal;
-
 import jakarta.persistence.*;
-import org.hibernate.annotations.Collate;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -21,10 +19,6 @@ public class BillRecord {
     private BigDecimal amount;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "rec_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "stay_id", referencedColumnName = "id", nullable = false)
     private StayRecord record;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private BillType type;
 }

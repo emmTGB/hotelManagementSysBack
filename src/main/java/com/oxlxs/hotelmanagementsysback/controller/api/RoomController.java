@@ -1,16 +1,29 @@
 package com.oxlxs.hotelmanagementsysback.controller.api;
 
 import com.oxlxs.hotelmanagementsysback.dto.request.RoomCreateRequest;
+import com.oxlxs.hotelmanagementsysback.dto.response.AvailableRoomResponse;
+import com.oxlxs.hotelmanagementsysback.dto.response.RoomInfoResponse;
+import com.oxlxs.hotelmanagementsysback.dto.response.RoomTypeResponse;
+import com.oxlxs.hotelmanagementsysback.service.RoomService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 // 房间的信息控制器
 @RestController
 @RequestMapping("/api/room")
 public class RoomController {
+
+    @Autowired
+    private RoomService roomService;
+
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String > create(@RequestBody RoomCreateRequest request, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             return ResponseEntity.badRequest().body(
@@ -21,6 +34,7 @@ public class RoomController {
         }
 
         try {
+            roomService.create(request);
             return ResponseEntity.ok().body("Create success");
         }catch (RuntimeException e){
             return ResponseEntity.badRequest().body("Create failed");
@@ -28,11 +42,40 @@ public class RoomController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String > delete(@PathVariable Integer id){
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String > delete(@PathVariable Long id){
         try{
+            roomService.delete(id);
             return ResponseEntity.ok().body("Delete success");
         }catch (RuntimeException e){
             return ResponseEntity.badRequest().body("Delete failed");
+        }
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<RoomInfoResponse>> getRooms(){
+        try{
+            return ResponseEntity.ok(roomService.getRooms());
+        }catch (RuntimeException e){
+            return ResponseEntity.internalServerError().body(null);
+        }
+    }
+
+    @GetMapping("/type/list")
+    public ResponseEntity<List<RoomTypeResponse>> getRoomTypes(){
+        try{
+            return ResponseEntity.ok(roomService.getRoomTypes());
+        }catch (RuntimeException e){
+            return ResponseEntity.internalServerError().body(null);
+        }
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<List<AvailableRoomResponse>> getAvailable(){
+        try{
+            return ResponseEntity.ok(roomService.getAvailable());
+        }catch (RuntimeException e){
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 }

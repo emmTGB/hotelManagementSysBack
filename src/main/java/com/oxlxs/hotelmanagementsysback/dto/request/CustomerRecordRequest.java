@@ -6,10 +6,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CustomerValidateRequest {
+public class CustomerRecordRequest {
     @NotBlank(message = "Invalid customer name!")
     private String name;
 
     private String phone;
     private String idNumber;
+
+    private int status;
 }
