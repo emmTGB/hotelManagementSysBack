@@ -14,7 +14,7 @@ import java.util.Date;
 @Service
 public class JwtProvider {
 
-    private static final String SECRET_KEY = "IamTheStormThatIsApproachingProvokingWithYourBloodyStream";
+    private static final String SECRET_KEY = "thisIsAVeryLongSecretKeyThatIs256BitsLong12345";
     private static final long ACCESS_TOKEN_EXPIRATION_TIME = 60*60*1000;  // access 一小时过期
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 7*24*60*60*1000;  // refresh 七天过期，自带续期
 

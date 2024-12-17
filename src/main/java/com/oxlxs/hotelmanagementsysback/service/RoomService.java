@@ -1,5 +1,6 @@
 package com.oxlxs.hotelmanagementsysback.service;
 
+import com.oxlxs.hotelmanagementsysback.dto.request.NewRoomTypeRequest;
 import com.oxlxs.hotelmanagementsysback.dto.request.RoomCreateRequest;
 import com.oxlxs.hotelmanagementsysback.dto.response.AvailableRoomResponse;
 import com.oxlxs.hotelmanagementsysback.dto.response.RoomInfoResponse;
@@ -7,6 +8,7 @@ import com.oxlxs.hotelmanagementsysback.dto.response.RoomTypeResponse;
 import com.oxlxs.hotelmanagementsysback.entity.AvailableRoom;
 import com.oxlxs.hotelmanagementsysback.entity.Room;
 import com.oxlxs.hotelmanagementsysback.entity.RoomType;
+import com.oxlxs.hotelmanagementsysback.exception.room.RoomTypeNotFoundException;
 import com.oxlxs.hotelmanagementsysback.repository.AvailableRoomDAO;
 import com.oxlxs.hotelmanagementsysback.repository.RoomDAO;
 import com.oxlxs.hotelmanagementsysback.repository.RoomTypeDAO;
@@ -51,6 +53,16 @@ public class RoomService {
     public List<RoomInfoResponse> getRooms() throws RuntimeException{
         List<Room> rooms = roomDAO.findAll();
         return rooms.stream().map(RoomInfoResponse::new).toList();
+    }
+
+    public void createRoomType(NewRoomTypeRequest request) throws RuntimeException {
+        RoomType type = new RoomType(request);
+        roomTypeDAO.save(type);
+    }
+
+    public void deleteRoomType(String name) throws RuntimeException {
+        RoomType type = roomTypeDAO.findById(name).orElseThrow(RoomTypeNotFoundException::new);
+        roomTypeDAO.delete(type);
     }
 
     public List<RoomTypeResponse> getRoomTypes() throws RuntimeException{

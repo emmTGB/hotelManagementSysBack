@@ -1,5 +1,6 @@
 package com.oxlxs.hotelmanagementsysback.entity;
 
+import com.oxlxs.hotelmanagementsysback.dto.request.NewRoomTypeRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -24,4 +25,13 @@ public class RoomType {
     @Column(nullable = false)
     private BigDecimal price;
 
+    public RoomType(NewRoomTypeRequest request) {
+        this.name = request.getName();
+        this.fullName = request.getFullName();
+        this.price = request.getPrice();
+    }
+
+    public RoomType() {
+
+    }
 }

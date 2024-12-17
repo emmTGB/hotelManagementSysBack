@@ -32,6 +32,7 @@ public class StayController {
         }
 
         try {
+            stayService.checkOut(request);
             return ResponseEntity.status(HttpStatus.OK).body("Check out success");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Check out failed");
@@ -53,7 +54,8 @@ public class StayController {
             stayService.checkIn(request);
             return ResponseEntity.status(HttpStatus.OK).body("Check in success");
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Check out failed");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Check in failed");
         }
     }
 }

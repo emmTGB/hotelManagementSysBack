@@ -34,7 +34,7 @@ public class Customer {
     private StayRecord stayRecord;
 
     @Column
-    private int status;
+    private Integer status;
 
     @Column(nullable = false)
     private boolean mainRes = false;

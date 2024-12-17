@@ -37,6 +37,7 @@ public class EmployeeAuthController {
             return ResponseEntity.ok()
                     .header("Authorization", headers.get("Authorization"))
                     .header("id", headers.get("id"))
+                    .header("role", headers.get("role"))
                     .body("Login successfully");
         }catch (EmployeePasswordWrongException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Passwords don't match");
@@ -59,6 +60,7 @@ public class EmployeeAuthController {
             return ResponseEntity.ok()
                     .header("Authorization", headers.get("Authorization"))
                     .header("id", headers.get("id"))
+                    .header("role", headers.get("role"))
                     .body("Register successfully");
         }catch (EmployeeAlreadyExistsException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Employee Already Exists");

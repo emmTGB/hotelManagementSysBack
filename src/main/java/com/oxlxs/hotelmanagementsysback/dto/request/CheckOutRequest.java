@@ -6,6 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CheckOutRequest {
-    private Long stayId;
+    private Long roomId;
+    private String name;
+    private String idNumber;
     private Long operatorId;
 }

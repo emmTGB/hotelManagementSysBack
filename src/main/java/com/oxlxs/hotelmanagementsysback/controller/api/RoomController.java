@@ -1,11 +1,13 @@
 package com.oxlxs.hotelmanagementsysback.controller.api;
 
+import com.oxlxs.hotelmanagementsysback.dto.request.NewRoomTypeRequest;
 import com.oxlxs.hotelmanagementsysback.dto.request.RoomCreateRequest;
 import com.oxlxs.hotelmanagementsysback.dto.response.AvailableRoomResponse;
 import com.oxlxs.hotelmanagementsysback.dto.response.RoomInfoResponse;
 import com.oxlxs.hotelmanagementsysback.dto.response.RoomTypeResponse;
 import com.oxlxs.hotelmanagementsysback.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -70,11 +72,42 @@ public class RoomController {
         }
     }
 
+    @PostMapping("/type/create")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> createRoomType(@RequestBody NewRoomTypeRequest request, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            StringBuilder errorMessages = new StringBuilder();
+            bindingResult.getAllErrors().forEach(error -> errorMessages.append(error.getDefaultMessage()).append("\n"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessages.toString());
+        }
+
+        try{
+            roomService.createRoomType(request);
+            return ResponseEntity.ok("Create Room Type success");
+        }catch (RuntimeException e){
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+
+    }
+
+    @DeleteMapping("/type/{name}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteRoomType(@PathVariable String name){
+        try{
+            roomService.deleteRoomType(name);
+            return ResponseEntity.ok("Delete Room Type success");
+        }catch (RuntimeException e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/available")
     public ResponseEntity<List<AvailableRoomResponse>> getAvailable(){
         try{
             return ResponseEntity.ok(roomService.getAvailable());
         }catch (RuntimeException e){
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body(null);
         }
     }

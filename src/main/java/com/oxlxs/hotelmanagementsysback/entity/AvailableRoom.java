@@ -16,8 +16,6 @@ import java.math.BigDecimal;
 public class AvailableRoom {
 
     @Id
-    private Long id;
-
     @Column(nullable = false)
     private String typeName;
 

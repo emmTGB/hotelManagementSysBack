@@ -16,13 +16,24 @@ public interface StayRecordDAO extends JpaRepository<StayRecord, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "call checkin(:time, :roomId, :deposit, :name, :idNumber, :phone)", nativeQuery = true)
-    Long checkin(
+    @Query(value = "call checkin(:time, :roomId, :deposit, :id, :idNumber)", nativeQuery = true)
+    void checkin(
             @Param("time") LocalDateTime time,
             @Param("roomId") Long roomId,
             @Param("deposit") BigDecimal deposit,
-            @Param("name") String name,
-            @Param("idNumber") String idNumber,
-            @Param("phone") String phone
+            @Param("id") Long id,
+            @Param("idNumber") String idNumber
     );
+
+    @Transactional
+    @Modifying
+    @Query(
+            value = "call checkout(:roomId, :outTime)",
+            nativeQuery = true
+    )
+    void checkout(
+            @Param("roomId") Long roomId,
+            @Param("outTime") LocalDateTime outTime
+    );
+
 }

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class EmployeeService {
@@ -39,22 +38,22 @@ public class EmployeeService {
         employee.setUsername(request.getUsername());
         employee.setPassword(passwordEncoder.encode(request.getPassword()));
         employee.setRole(EmployeeRole.valueOf(request.getRole()));
-        Long id = employeeDAO.save(employee).getId();
 
         String accessToken = jwtProvider.createEmployeeToken(employee.getUsername(), employee.getRole());
+
+        Long id = employeeDAO.save(employee).getId();
 
         Map<String, String> map = new HashMap<>();
         map.put("Authorization", accessToken);
         map.put("id", String.valueOf(id));
+        map.put("role", String.valueOf(employee.getRole()));
         return map;
     }
 
     public Map<String, String> login(LoginRequest request) throws RuntimeException {
-        if (!employeeDAO.existsByUsername(request.getUsername())) {
-            throw new EmployeeNotExistsException();
-        }
-        Employee employee = new Employee();
-        if(!Objects.equals(employee.getPassword(), passwordEncoder.encode(request.getPassword()))) {
+        Employee employee = employeeDAO.findByUsername(request.getUsername()).orElseThrow(EmployeeNotExistsException::new);
+
+        if(!passwordEncoder.matches(request.getPassword(), employee.getPassword())) {
             throw new EmployeePasswordWrongException();
         }
 
@@ -63,6 +62,7 @@ public class EmployeeService {
         Map<String, String> map = new HashMap<>();
         map.put("Authorization", accessToken);
         map.put("id", String.valueOf(employee.getId()));
+        map.put("role", String.valueOf(employee.getRole()));
         return map;
     }
 
