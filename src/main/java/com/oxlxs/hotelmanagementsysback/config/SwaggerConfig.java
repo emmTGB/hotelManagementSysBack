@@ -14,7 +14,7 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("BankManagement System")
+                        .title("HotelManagement System")
                         .version("1.0")
                         .description("BankManagement System")
                         .contact(new Contact()

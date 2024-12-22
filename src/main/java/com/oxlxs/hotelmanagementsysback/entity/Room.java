@@ -11,12 +11,11 @@ import lombok.Setter;
 public class Room {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RoomStatus status;
+    private RoomStatus status = RoomStatus.AVAILABLE;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "type_name", referencedColumnName = "name")

@@ -7,6 +7,7 @@ import com.oxlxs.hotelmanagementsysback.dto.response.RoomInfoResponse;
 import com.oxlxs.hotelmanagementsysback.dto.response.RoomTypeResponse;
 import com.oxlxs.hotelmanagementsysback.entity.AvailableRoom;
 import com.oxlxs.hotelmanagementsysback.entity.Room;
+import com.oxlxs.hotelmanagementsysback.entity.RoomStatus;
 import com.oxlxs.hotelmanagementsysback.entity.RoomType;
 import com.oxlxs.hotelmanagementsysback.exception.room.RoomTypeNotFoundException;
 import com.oxlxs.hotelmanagementsysback.repository.AvailableRoomDAO;
@@ -44,10 +45,10 @@ public class RoomService {
     }
 
     public void delete(Long id) throws RuntimeException {
-        if (!roomDAO.existsById(id))
-            throw new RuntimeException("Room not found");
+        Room room = roomDAO.findById(id).orElseThrow(() -> new RuntimeException("Room not found"));
+        room.setStatus(RoomStatus.DELETED);
 
-        roomDAO.deleteById(id);
+        roomDAO.save(room);
     }
 
     public List<RoomInfoResponse> getRooms() throws RuntimeException{

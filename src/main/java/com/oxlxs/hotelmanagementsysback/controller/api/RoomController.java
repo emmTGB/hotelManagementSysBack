@@ -39,7 +39,8 @@ public class RoomController {
             roomService.create(request);
             return ResponseEntity.ok().body("Create success");
         }catch (RuntimeException e){
-            return ResponseEntity.badRequest().body("Create failed");
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Create failed");
         }
     }
 

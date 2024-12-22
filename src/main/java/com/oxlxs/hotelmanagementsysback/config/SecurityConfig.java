@@ -65,15 +65,17 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://10.79.233.200:5173");
+//        config.addAllowedOrigin("http://10.85.21.73:5173");
+        config.addAllowedOrigin("https://113.56.219.98:19912");
+        config.addAllowedOrigin("https://my.h5bda073e.nyat.app:19912");
         config.addAllowedOrigin("http://localhost:5173");
         config.addAllowedHeader("*");
-        config.addAllowedHeader("Refresh-Token");
+        config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setExposedHeaders(List.of(
                 "Authorization",
-                "Refresh-Token",
-                "ID"
+                "id",
+                "role"
         ));
         config.setMaxAge(3600L);
         source.registerCorsConfiguration("/**", config);

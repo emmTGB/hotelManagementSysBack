@@ -34,6 +34,7 @@ public class BillRecordService {
                     if (customer == null) { return null; }
                     billResponse.setName(customer.getName());
                     billResponse.setRoomId(room.getId());
+                    billResponse.setTypeName(room.getType().getName());
                     billResponse.setAmount(billRecord.getAmount());
                     billResponse.setInTime(stayRecord.getCheckinTime());
                     billResponse.setOutTime(stayRecord.getCheckoutTime());

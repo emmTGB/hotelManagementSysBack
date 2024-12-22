@@ -19,3 +19,15 @@ server:
   jetty:
     threads:
       max: 200
+  ssl:
+    key-store: C:\Users\lsg30\IdeaProjects\hotelManagementSysBack\src\main\resources\keystore.jks
+    key-store-password: 233lsg20040227
+    key-store-type: JKS
+    key-alias: mykey
+#logging:
+#  level:
+#    org.springframework.security: debug
+#    org.springframework.security.access: debug
+#    org.springframework.web: debug
+#    org.springframework.security.authentication: debug
+

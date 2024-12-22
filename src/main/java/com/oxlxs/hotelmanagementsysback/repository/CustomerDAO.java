@@ -15,6 +15,9 @@ public interface CustomerDAO extends JpaRepository<Customer, Long> {
 
     // public Page<Customer> findAll(Pageable pageable);
 
+    @Query(value = "select case when count(u) > 0 then true else false end from Customer u where u.idNumber = :id_number and u.status is not null")
+    public boolean isBusy(@Param("id_number") String idNumber);
+
     public Optional<Customer> findByStayRecordAndMainRes(StayRecord stayRecord, boolean mainRes);
 
     @Modifying
