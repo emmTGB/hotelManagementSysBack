@@ -5,12 +5,12 @@ spring:
     hikari:
       username: oxlxs
       password: 123456
-#  data:
-#    redis:
-#      port: 6379
-#      host: localhost
-#      connect-timeout: 5000
-#      database: 1
+  data:
+    redis:
+      port: 6379
+      host: localhost
+      connect-timeout: 5000
+      database: 1
 
   application:
     name: hotelManagementSysBack

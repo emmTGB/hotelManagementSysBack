@@ -5,6 +5,10 @@ import com.oxlxs.hotelmanagementsysback.dto.request.RoomCreateRequest;
 import com.oxlxs.hotelmanagementsysback.dto.response.AvailableRoomResponse;
 import com.oxlxs.hotelmanagementsysback.dto.response.RoomInfoResponse;
 import com.oxlxs.hotelmanagementsysback.dto.response.RoomTypeResponse;
+import com.oxlxs.hotelmanagementsysback.exception.room.RoomAlreadyExistsException;
+import com.oxlxs.hotelmanagementsysback.exception.room.RoomNotFoundException;
+import com.oxlxs.hotelmanagementsysback.exception.room.RoomTypeAlreadyExistsException;
+import com.oxlxs.hotelmanagementsysback.exception.room.RoomTypeNotFoundException;
 import com.oxlxs.hotelmanagementsysback.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +42,10 @@ public class RoomController {
         try {
             roomService.create(request);
             return ResponseEntity.ok().body("Create success");
+        }catch (RoomAlreadyExistsException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }catch(RoomTypeNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }catch (RuntimeException e){
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Create failed");
@@ -69,6 +77,7 @@ public class RoomController {
         try{
             return ResponseEntity.ok(roomService.getRoomTypes());
         }catch (RuntimeException e){
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body(null);
         }
     }
@@ -85,6 +94,8 @@ public class RoomController {
         try{
             roomService.createRoomType(request);
             return ResponseEntity.ok("Create Room Type success");
+        }catch (RoomTypeAlreadyExistsException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }catch (RuntimeException e){
             e.printStackTrace();
             return ResponseEntity.internalServerError().body(e.getMessage());

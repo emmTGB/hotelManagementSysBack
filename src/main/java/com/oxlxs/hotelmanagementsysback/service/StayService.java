@@ -5,9 +5,11 @@ import com.oxlxs.hotelmanagementsysback.dto.request.CheckOutRequest;
 import com.oxlxs.hotelmanagementsysback.dto.request.CustomerRecordRequest;
 import com.oxlxs.hotelmanagementsysback.entity.Customer;
 import com.oxlxs.hotelmanagementsysback.entity.StayRecord;
+import com.oxlxs.hotelmanagementsysback.exception.customer.CustomerBusyException;
 import com.oxlxs.hotelmanagementsysback.exception.customer.CustomerNotFoundException;
 import com.oxlxs.hotelmanagementsysback.exception.room.RoomNotFoundException;
 import com.oxlxs.hotelmanagementsysback.repository.CustomerDAO;
+import com.oxlxs.hotelmanagementsysback.repository.RoomDAO;
 import com.oxlxs.hotelmanagementsysback.repository.StayRecordDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +26,14 @@ public class StayService {
     @Autowired
     CustomerDAO customerDAO;
 
-    public void checkOut(CheckOutRequest request) {
+    @Autowired
+    RoomDAO roomDAO;
+
+    public void checkOut(CheckOutRequest request) throws RuntimeException  {
         LocalDateTime now = LocalDateTime.now();
+        if(!roomDAO.existsById(request.getRoomId())){
+            throw new RoomNotFoundException();
+        }
         stayRecordDAO.checkout(request.getRoomId(), now);
     }
 
@@ -58,7 +66,7 @@ public class StayService {
                 );
             } catch (RuntimeException e) {
                 customerDAO.deleteById(uId);
-                throw new RoomNotFoundException();
+                throw new CustomerBusyException();
             }
             StayRecord stayRecord = customerDAO.findById(uId).orElseThrow(CustomerNotFoundException::new).getStayRecord();
             for(CustomerRecordRequest customer : customers){

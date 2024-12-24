@@ -6,11 +6,13 @@ import com.oxlxs.hotelmanagementsysback.dto.request.CheckOutRequest;
 import com.oxlxs.hotelmanagementsysback.dto.response.BookRecordResponse;
 import com.oxlxs.hotelmanagementsysback.exception.customer.CustomerBusyException;
 import com.oxlxs.hotelmanagementsysback.exception.room.RoomNotFoundException;
+import com.oxlxs.hotelmanagementsysback.exception.room.RoomTypeNotFoundException;
 import com.oxlxs.hotelmanagementsysback.service.BookService;
 import com.oxlxs.hotelmanagementsysback.service.StayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +43,18 @@ public class StayController {
         try {
             stayService.checkOut(request);
             return ResponseEntity.status(HttpStatus.OK).body("Check out success");
-        } catch (RuntimeException e) {
+        }catch (RoomNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Room not found");
+        }catch (JpaSystemException e){
+            String msg;
+            String[] parts = e.getMessage().split("\\[");
+            if (parts.length > 2) {
+                msg = parts[2].split("\\]")[0].trim();
+            }else{
+                msg = e.getMessage();
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(msg);
+        }catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Check out failed");
         }
     }
@@ -60,6 +73,8 @@ public class StayController {
         try {
             stayService.checkIn(request);
             return ResponseEntity.status(HttpStatus.OK).body("Check in success");
+        }catch (CustomerBusyException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Check in failed");
         }catch (RoomNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Room not found");
         }catch (RuntimeException e) {

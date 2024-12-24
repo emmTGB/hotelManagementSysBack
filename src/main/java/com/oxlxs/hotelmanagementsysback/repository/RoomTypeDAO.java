@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RoomTypeDAO extends JpaRepository<RoomType, String> {
-
+    boolean existsByFullName(String fullName);
 }
